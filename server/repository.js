@@ -1,13 +1,9 @@
 'use strict'
 
-module.exports.addWord = addWord
-module.exports.addPassage = addPassage
-module.exports.findWord = findWord
-module.exports.findPassage = findPassage
-module.exports.addWordPassage = addWordPassage
-module.exports.findWordPassages = findWordPassages
+module.exports = { addWord, addPassage, findWord,  findPassage, addWordPassage, findWordPassages }
 
 const memstore = require("./memstore")
+const pokeDB = require('./pokestore')
 
 const immutable = (o) => Object.freeze(o)
 
@@ -19,6 +15,7 @@ function addWord(data) {
   const word = {id : null, word : data.chars,
     lang : data.lang, english : data.english}
   memstore.addWord(word)
+  pokeDB.postSafe(({word: word}))
   return immutable(word)
 }
 

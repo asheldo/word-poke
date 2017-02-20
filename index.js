@@ -15,8 +15,10 @@ function run() {
 function start(serverState) {
   serverState.server.listen(config.port, function() {
     const routes = require('./api/routes')
+    const routesDB = require('./api/routesDB')
     serverState.state = config.serverStates.on
-    console.log(`Server listening, port: ${config.port}\n${routes}`)
+    console.log(`Server listening, port: ${config.port}
+      routing ${(routes && routesDB)}`)
   })
 }
 

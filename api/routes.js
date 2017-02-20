@@ -1,9 +1,8 @@
 'use strict'
 
-const repository = require('./repository')
+const repository = require('../server/repository')
 // const server = global.server
-const config = require('../config/server')
-const server = config.serverState.server
+const server = require('../config/server').serverState.server
 
 // Could validate name content, overwritten id, ...
 server.post('/word', postWord)
@@ -13,21 +12,13 @@ server.get('/passage/:passage_id', getPassage)
 server.post('word/:word_id/passage/:passage_id', postWordPassage)
 server.get('/word/:word_id/passage', getWordPassages)
 
-const docstore = require("../client/docstore")
-
 function postWord(req, res, next) {
   try {
-    let word = repository.addWord(req.params || {})
+    const word = repository.addWord(req.params || {})
     if (word.error) {
       res.send(400, word.error)
     } else {
-      docstore.couchOK().then(
-        function(ok) {
-          res.send(201, ({ word : word, ok : ok}))
-        }
-      ).catch(function(err) {
-        res.send(201, ({ word : word, err : err}))
-      })
+      res.send(201, word)
     }
   } catch (e) {
     res.send(500, e.message)
