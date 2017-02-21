@@ -1,6 +1,6 @@
 'use strict'
 
-const docstore = require("../client/docstore")
+const couchDB = require("../client/couch")
 
 // const PouchDB = require('pouchdb')
 // var poke = new PouchDB('Poke')
@@ -12,24 +12,41 @@ const docstore = require("../client/docstore")
 
 // pokeDB.postSafe(({word: word}))
 
-module.exports.postSafe = function postSafe(data) {
+module.exports.putData = putData
+
+function putData(data) {
   const word_id = data.word ? data.word.id : null
   const passage_id = data.passage ? data.passage.id : null
   if (word_id && passage_id) {
-    postWordPassage(word_id, passage_id)
+    putWordPassage(word_id, passage_id)
     return data
   } else if (word_id) {
-    postWord(data.word)
+    putWord(data.word)
     return data
   } else if (passage_id) {
-    postPassage(data.passage)
+    putPassage(data.passage)
     return data
   } else {
     console.log(`postSafe nothing`)
   }
 }
 
-function postWordPassage(word_id, passage_id) {
+
+function putWord(word) {
+  console.log(`db: ${word}`)
+  couchDB.couchPut(`/${word.lang}/${word.chars}`, word).then(
+    function(ok) {
+      // res.send(201, ({ word : word, ok : ok}))
+      console.log(ok)
+    }
+  ).catch(function(err) {
+    // res.send(201, ({ word : word, err : err}))
+    console.log(err)
+  })
+
+}
+
+function putWordPassage(word_id, passage_id) {
   console.log(`db: ${word_id} in ${passage_id}`)
   docstore.couchOK().then(
     function(ok) {
@@ -42,22 +59,8 @@ function postWordPassage(word_id, passage_id) {
   })
 }
 
-function postPassage(passage) {
+function putPassage(passage) {
   console.log(`db: ${passage}`)
-  docstore.couchOK().then(
-    function(ok) {
-      // res.send(201, ({ word : word, ok : ok}))
-      console.log(ok)
-    }
-  ).catch(function(err) {
-    // res.send(201, ({ word : word, err : err}))
-    console.log(err)
-  })
-
-}
-
-function postWord(word) {
-  console.log(`db: ${word}`)
   docstore.couchOK().then(
     function(ok) {
       // res.send(201, ({ word : word, ok : ok}))

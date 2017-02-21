@@ -2,7 +2,9 @@
 
 const server = require("../config/server").serverState.server
 
-const docstore = require("../client/docstore")
+// TODO // const pokeDB = require("../server/pokestore")
+
+const docstore = require("../client/couch")
 
 // get info
 server.get("words/monitor", function(req,res,next) {

@@ -15,7 +15,7 @@ function addWord(data) {
   const word = {id : null, word : data.chars,
     lang : data.lang, english : data.english}
   memstore.addWord(word)
-  pokeDB.postSafe(({word: word}))
+  pokeDB.putData(({word: word}))
   return immutable(word)
 }
 
@@ -29,6 +29,7 @@ function addPassage(data) {
   const passage = {id : null, chars : data.chars,
     source : data.source, lang : data.lang, english : data.english}
   memstore.addPassage(passage)
+
   return immutable(passage)
 }
 
@@ -65,6 +66,7 @@ function addWordPassage(data) {
     return data
   }
   memstore.addWordPassageID(word.id, passage.id)
+
   return immutable({word_id : word.id,
      passage_id : passage.id})
 }
